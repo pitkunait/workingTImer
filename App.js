@@ -8,19 +8,15 @@
 
 import React from 'react';
 import { SafeAreaView, StatusBar, StyleSheet } from 'react-native';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
-import Categories from './src/components/Categories/Categories';
+import { NavigationContainer } from '@react-navigation/native';
 
+import Navigation from './src/components/Navigation/Navigation';
 
 const App: () => React$Node = () => {
   return (
-      <SafeAreaProvider>
-
-        <StatusBar barStyle="dark-content"/>
-        <SafeAreaView>
-          <Categories/>
-        </SafeAreaView>
-      </SafeAreaProvider>
+    <NavigationContainer>
+      <Navigation />
+    </NavigationContainer>
   );
 };
 
