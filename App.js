@@ -5,6 +5,7 @@
  * @format
  * @flow strict-local
  */
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import React from 'react';
 import {
@@ -26,7 +27,8 @@ import {
 
 const App: () => React$Node = () => {
   return (
-    <>
+    <SafeAreaProvider>
+
       <StatusBar barStyle="dark-content" />
       <SafeAreaView>
         <ScrollView
@@ -68,7 +70,7 @@ const App: () => React$Node = () => {
           </View>
         </ScrollView>
       </SafeAreaView>
-    </>
+    </SafeAreaProvider>
   );
 };
 
