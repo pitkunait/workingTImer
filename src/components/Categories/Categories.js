@@ -1,146 +1,159 @@
+//@flow
+
 import React, { useState } from 'react';
 import {
-  Text,
-  View,
-  StyleSheet,
-  ScrollView,
-  SafeAreaView,
-  StatusBar,
-  TouchableOpacity,
+    ScrollView,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    View,
 } from 'react-native';
 
-import { Card, Input, Button, ButtonGroup, Icon } from 'react-native-elements';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
+import {
+    Button,
+    ButtonGroup,
+    Icon,
+    Input,
+    Overlay,
+} from 'react-native-elements';
 
-import AppHeader from '../AppHeader/AppHeader';
+const categoryTemplate = {
+    title: '',
+    time: 0,
+    icon: null,
+};
 
-import { Overlay } from 'react-native-elements';
+// this will later come from redux
+const mockCategories = [
+    {
+        title: 'Time With Nikita',
+        time: 0,
+        icon: null,
+    },
+];
+
+const BUTTONS = [
+    'rowing',
+    'thumb-up',
+    'sleep',
+    'coffee-maker',
+    'run',
+    'sleep',
+    'coffee-maker',
+];
+
+const COLORS = ['red', 'blue', 'green', 'yellow'];
 
 const Categories = () => {
-  const [newCategory, setNewCategory] = useState({
-    title: '',
-    icon: null,
-  });
+    const [newCategory, setNewCategory] = useState({ ...categoryTemplate });
+    const [categories, setCategories] = useState(mockCategories);
+    const [isOverlayOpen, setIsOverlayOpen] = useState(false);
+    const [editCategory, setEditCategory] = useState();
 
-  const [categories, setCategories] = useState([
-    {
-      title: 'Title1',
-      icon: null,
-    },
-  ]);
+    const addCategory = () => {
+        setCategories([...categories, newCategory]);
+        setNewCategory({ ...categoryTemplate });
+    };
 
-  const addCategory = () => {
-    setCategories([...categories, newCategory]);
-    setNewCategory({ title: '' });
-  };
+    const removeCategory = (index) => {
+        categories.splice(index, 1);
+        setCategories([...categories]);
+    };
 
-  const removeCategory = (index) => {
-    categories.splice(index, 1);
-    setCategories([...categories]);
-  };
+    const onNewCategoryChange = (key) => (value) => {
+        setNewCategory({ ...newCategory, [key]: value });
+    };
 
-  const onNewCategoryChange = (key) => (value) => {
-    setNewCategory({ ...newCategory, [key]: value });
-  };
+    const changeIcon = (index) => {
+        categories[editCategory].icon =
+            BUTTONS[index] === categories[editCategory].icon
+                ? null
+                : BUTTONS[index];
+        setCategories([...categories]);
+    };
 
-  const changeIcon = (index) => {
-    categories[index].icon = categories[index].icon ? null : 'thumb-up';
-    setCategories([...categories]);
-  };
+    const toggleOverlay = (index) => {
+        setEditCategory(index);
+        setIsOverlayOpen(!isOverlayOpen);
+    };
 
-  const [visible, setVisible] = useState(false);
-
-  const toggleOverlay = () => {
-    setVisible(!visible);
-  };
-
-  const buttons = ['walk', 'run', 'sleep', 'coffee-maker', 'run', 'sleep', 'coffee-maker'];
-  const colors = ['red', 'blue', 'green', 'yellow'];
-
-  return (
-    <SafeAreaProvider>
-      <StatusBar barStyle="dark-content" />
-      <AppHeader />
-      <View>
-        <Overlay
-          overlayStyle={styles.overlay}
-          // isVisible={visible}
-          isVisible={true}
-          fullScreen
-          onBackdropPress={toggleOverlay}>
-          <ButtonGroup
-            buttons={buttons}
-            icon={<Icon name="thumb-up" color="red" />}
-          />
-        </Overlay>
-      </View>
-      <View style={styles.container}>
-        <ScrollView>
-          {categories.map((i, index) => (
-            <TouchableOpacity
-              key={index}
-              style={styles.category}
-              // onLongPress={() => changeIcon(index)}>
-              onLongPress={toggleOverlay}>
-              <Icon name={i.icon} />
-              <Text>{i.title}</Text>
-              <Icon
-                name="close"
-                onPress={() => removeCategory(index)}
-                color="#f50"
-              />
-            </TouchableOpacity>
-          ))}
-        </ScrollView>
-        <View>
-          <View style={styles.inputBox}>
-            <Input
-              placeholder="INPUT"
-              value={newCategory.title}
-              onChangeText={onNewCategoryChange('title')}
-            />
-          </View>
-          <Button
-            title="SAFE"
-            onPress={addCategory}
-            icon={<Icon name="thumb-up" color="white" />}
-            iconRight
-          />
-        </View>
-      </View>
-    </SafeAreaProvider>
-  );
+    return (
+        <>
+            <Overlay
+                overlayStyle={styles.overlay}
+                isVisible={isOverlayOpen}
+                fullScreen
+                onBackdropPress={() => setIsOverlayOpen(false)}>
+                <ButtonGroup
+                    buttons={BUTTONS.map((i) => (
+                        <Icon name={i} />
+                    ))}
+                    onPress={changeIcon}
+                />
+            </Overlay>
+            <View style={styles.container}>
+                <ScrollView>
+                    {categories.map((i, index) => (
+                        <TouchableOpacity
+                            key={index}
+                            style={styles.category}
+                            onLongPress={() => toggleOverlay(index)}>
+                            <Icon name={i.icon} />
+                            <Text>{i.title}</Text>
+                            <Text>
+                                {new Date(i.time * 10)
+                                    .toISOString()
+                                    .substr(11, 11)}
+                            </Text>
+                            <Icon
+                                name="close"
+                                onPress={() => removeCategory(index)}
+                                color="#f50"
+                            />
+                        </TouchableOpacity>
+                    ))}
+                </ScrollView>
+                <View>
+                    <View style={styles.inputBox}>
+                        <Input
+                            placeholder="INPUT"
+                            value={newCategory.title}
+                            onChangeText={onNewCategoryChange('title')}
+                        />
+                    </View>
+                    <Button
+                        title="SAFE"
+                        onPress={addCategory}
+                        icon={<Icon name="thumb-up" color="white" />}
+                        iconRight
+                    />
+                </View>
+            </View>
+        </>
+    );
 };
 
 const styles = StyleSheet.create({
-  category: {
-    flexDirection: 'row',
-    margin: 5,
-    padding: 10,
-    borderWidth: 1,
-    borderRadius: 5,
-    alignItems: 'center',
-    borderColor: '#aaaaaa',
-    justifyContent: 'space-between',
-  },
-  container: {
-    padding: 20,
-    justifyContent: 'space-between',
-    flex: 1,
-  },
-  inputBox: {
-    flexDirection: 'row',
-    borderBottomWidth: 1,
-    borderColor: '#000',
-    paddingBottom: 10,
-    // flex: 1,
-    // flexDirection: 'row',
-    // justifyContent: 'center',
-    // alignItems: 'center',
-    // backgroundColor: '#fff',
-  },
-  inputIcon: {},
-  overlay: { height: '50%', width: '90%' },
+    category: {
+        flexDirection: 'row',
+        margin: 5,
+        padding: 10,
+        borderWidth: 1,
+        borderRadius: 5,
+        alignItems: 'center',
+        borderColor: '#aaaaaa',
+        justifyContent: 'space-between',
+    },
+    container: {
+        padding: 20,
+        justifyContent: 'space-between',
+        flex: 1,
+    },
+    inputBox: {
+        paddingBottom: 10,
+    },
+    inputIcon: {},
+    overlay: { height: '50%', width: '90%' },
 });
 
 export default Categories;

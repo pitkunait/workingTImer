@@ -7,17 +7,22 @@
  */
 
 import React from 'react';
-import { SafeAreaView, StatusBar, StyleSheet } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 
 import Navigation from './src/components/Navigation/Navigation';
+import AppHeader from './src/components/AppHeader/AppHeader';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 const App: () => React$Node = () => {
-  return (
-    <NavigationContainer>
-      <Navigation />
-    </NavigationContainer>
-  );
+    return (
+        <SafeAreaProvider>
+            <AppHeader title={'Timer'} />
+            <NavigationContainer>
+                <Navigation />
+            </NavigationContainer>
+        </SafeAreaProvider>
+    );
 };
 
 const styles = StyleSheet.create({});

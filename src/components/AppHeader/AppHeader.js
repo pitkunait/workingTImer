@@ -1,14 +1,16 @@
 import React from 'react';
 import { Header } from 'react-native-elements';
 
-const AppHeader = () => {
-  return (
-    <Header
-      leftComponent={{ icon: 'menu', color: '#fff' }}
-      centerComponent={{ text: 'MY TITLE', style: { color: '#fff' } }}
-      rightComponent={{ icon: 'home', color: '#fff' }}
-    />
-  );
+const AppHeader = (props: { title: string }) => {
+    return (
+        <Header
+            // backgroundColor={'#444444'}
+            centerComponent={{
+                text: props.title,
+                style: { color: '#fff' },
+            }}
+        />
+    );
 };
 
 export default AppHeader;
