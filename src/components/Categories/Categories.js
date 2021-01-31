@@ -20,13 +20,13 @@ import connect from 'react-redux/lib/connect/connect';
 import {
     addCategory,
     removeCategory,
+    restoreObjects,
     selectCategory,
     tick,
 } from '../../store/actions/TimerActions';
 import Category from '../../data/Category';
 
 const BUTTONS = ['rowing', 'thumb-up'];
-
 const COLORS = ['red', 'blue', 'green', 'yellow'];
 
 const Categories = (props) => {
@@ -35,6 +35,7 @@ const Categories = (props) => {
     const [editCategory, setEditCategory] = useState();
 
     useEffect(() => {
+        props.restoreObjects();
         const interval = setInterval(() => {
             props.tick();
         }, 1000);
@@ -50,7 +51,7 @@ const Categories = (props) => {
 
     const onNewCategoryChange = (key) => (value) => {
         newCategory[key] = value;
-        setNewCategory(Category.update(newCategory));
+        setNewCategory(Category.fromObject(newCategory));
     };
 
     const changeIcon = (index) => {
@@ -161,6 +162,7 @@ const mapDispatchToProps = {
     removeCategory,
     selectCategory,
     tick,
+    restoreObjects,
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);

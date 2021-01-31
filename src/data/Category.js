@@ -19,9 +19,7 @@ export default class Category {
         this.timer = null;
     }
 
-    static update(category) {
-        const c = new Category();
-        c.title = category.title;
-        return c;
+    static fromObject(obj) {
+        return Object.assign(new Category(), obj);
     }
 }

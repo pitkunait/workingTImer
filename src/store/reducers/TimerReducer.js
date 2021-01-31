@@ -24,6 +24,9 @@ const timerReducer = createReducer(initialState, {
     STOP_SELECTED_TIMER: (state) => {
         state.categories[state.selectedCategory].stopTimer();
     },
+    RESTORE_OBJECTS: (state, action) => {
+        state.categories = state.categories.map((i) => Category.fromObject(i));
+    },
     TICK_TIMER: (state) => {
         state.categories = [...state.categories];
     },

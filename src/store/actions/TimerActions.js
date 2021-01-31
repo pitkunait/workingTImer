@@ -7,3 +7,4 @@ export const selectCategory = createAction('SELECT_CATEGORY');
 export const startSelectedTimer = createAction('START_SELECTED_TIMER');
 export const stopSelectedTimer = createAction('STOP_SELECTED_TIMER');
 export const tick = createAction('TICK_TIMER');
+export const restoreObjects = createAction('RESTORE_OBJECTS');
