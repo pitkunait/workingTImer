@@ -1,6 +1,6 @@
 //@flow
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     ScrollView,
     StyleSheet,
@@ -16,65 +16,58 @@ import {
     Input,
     Overlay,
 } from 'react-native-elements';
+import connect from 'react-redux/lib/connect/connect';
+import {
+    addCategory,
+    removeCategory,
+    selectCategory,
+    tick,
+} from '../../store/actions/TimerActions';
+import Category from '../../data/Category';
 
-const categoryTemplate = {
-    title: '',
-    time: 0,
-    icon: null,
-};
-
-// this will later come from redux
-const mockCategories = [
-    {
-        title: 'Time With Nikita',
-        time: 0,
-        icon: null,
-    },
-];
-
-const BUTTONS = [
-    'rowing',
-    'thumb-up',
-    'sleep',
-    'coffee-maker',
-    'run',
-    'sleep',
-    'coffee-maker',
-];
+const BUTTONS = ['rowing', 'thumb-up'];
 
 const COLORS = ['red', 'blue', 'green', 'yellow'];
 
-const Categories = () => {
-    const [newCategory, setNewCategory] = useState({ ...categoryTemplate });
-    const [categories, setCategories] = useState(mockCategories);
+const Categories = (props) => {
+    const [newCategory, setNewCategory] = useState(new Category());
     const [isOverlayOpen, setIsOverlayOpen] = useState(false);
     const [editCategory, setEditCategory] = useState();
 
-    const addCategory = () => {
-        setCategories([...categories, newCategory]);
-        setNewCategory({ ...categoryTemplate });
-    };
+    useEffect(() => {
+        const interval = setInterval(() => {
+            props.tick();
+        }, 1000);
+        return () => {
+            clearInterval(interval);
+        };
+    }, []);
 
-    const removeCategory = (index) => {
-        categories.splice(index, 1);
-        setCategories([...categories]);
+    const addCategory = () => {
+        props.addCategory(newCategory);
+        setNewCategory(new Category());
     };
 
     const onNewCategoryChange = (key) => (value) => {
-        setNewCategory({ ...newCategory, [key]: value });
+        newCategory[key] = value;
+        setNewCategory(Category.update(newCategory));
     };
 
     const changeIcon = (index) => {
-        categories[editCategory].icon =
-            BUTTONS[index] === categories[editCategory].icon
+        props.categories[editCategory].icon =
+            BUTTONS[index] === props.categories[editCategory].icon
                 ? null
                 : BUTTONS[index];
-        setCategories([...categories]);
     };
 
     const toggleOverlay = (index) => {
         setEditCategory(index);
         setIsOverlayOpen(!isOverlayOpen);
+    };
+
+    const selectCategory = (index) => {
+        props.selectCategory(index);
+        props.navigation.navigate('Timer');
     };
 
     return (
@@ -93,21 +86,22 @@ const Categories = () => {
             </Overlay>
             <View style={styles.container}>
                 <ScrollView>
-                    {categories.map((i, index) => (
+                    {props.categories.map((i, index) => (
                         <TouchableOpacity
                             key={index}
                             style={styles.category}
+                            onPress={() => selectCategory(index)}
                             onLongPress={() => toggleOverlay(index)}>
                             <Icon name={i.icon} />
                             <Text>{i.title}</Text>
                             <Text>
-                                {new Date(i.time * 10)
+                                {new Date(i.time * 1000)
                                     .toISOString()
-                                    .substr(11, 11)}
+                                    .substr(11, 8)}
                             </Text>
                             <Icon
                                 name="close"
-                                onPress={() => removeCategory(index)}
+                                onPress={() => props.removeCategory(index)}
                                 color="#f50"
                             />
                         </TouchableOpacity>
@@ -156,4 +150,19 @@ const styles = StyleSheet.create({
     overlay: { height: '50%', width: '90%' },
 });
 
-export default Categories;
+const mapStateToProps = (state) => {
+    return {
+        categories: state.timer.categories,
+    };
+};
+
+const mapDispatchToProps = {
+    addCategory,
+    removeCategory,
+    selectCategory,
+    tick,
+};
+
+const connector = connect(mapStateToProps, mapDispatchToProps);
+
+export default connector(Categories);
