@@ -1,3 +1,5 @@
+import BackgroundTimer from 'react-native-background-timer';
+
 export default class Category {
     title = '';
     time = 0;
@@ -9,13 +11,13 @@ export default class Category {
     }
 
     startTimer() {
-        this.timer = setInterval(() => {
+        this.timer = BackgroundTimer.setInterval(() => {
             this.time += 1;
         }, 1000);
     }
 
     stopTimer() {
-        clearInterval(this.timer);
+        BackgroundTimer.clearInterval(this.timer);
         this.timer = null;
     }
 

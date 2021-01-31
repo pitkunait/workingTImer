@@ -25,6 +25,7 @@ import {
     tick,
 } from '../../store/actions/TimerActions';
 import Category from '../../data/Category';
+import BackgroundTimer from 'react-native-background-timer';
 
 const BUTTONS = ['rowing', 'thumb-up'];
 const COLORS = ['red', 'blue', 'green', 'yellow'];
@@ -36,10 +37,12 @@ const Categories = (props) => {
 
     useEffect(() => {
         props.restoreObjects();
+        BackgroundTimer.stop();
         const interval = setInterval(() => {
             props.tick();
         }, 1000);
         return () => {
+            BackgroundTimer.start();
             clearInterval(interval);
         };
     }, []);

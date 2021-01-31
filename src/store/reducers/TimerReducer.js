@@ -19,13 +19,20 @@ const timerReducer = createReducer(initialState, {
         }
     },
     START_SELECTED_TIMER: (state) => {
-        state.categories[state.selectedCategory].startTimer();
+        if (state.selectedCategory !== null) {
+            state.categories[state.selectedCategory].startTimer();
+        }
     },
     STOP_SELECTED_TIMER: (state) => {
-        state.categories[state.selectedCategory].stopTimer();
+        if (state.selectedCategory !== null) {
+            state.categories[state.selectedCategory].stopTimer();
+        }
     },
     RESTORE_OBJECTS: (state, action) => {
         state.categories = state.categories.map((i) => Category.fromObject(i));
+        state.categories.forEach((i) => {
+            i.timer && i.startTimer();
+        });
     },
     TICK_TIMER: (state) => {
         state.categories = [...state.categories];
