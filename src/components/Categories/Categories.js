@@ -62,6 +62,7 @@ const Categories = (props) => {
             BUTTONS[index] === props.categories[editCategory].icon
                 ? null
                 : BUTTONS[index];
+        toggleOverlay(index);
     };
 
     const toggleOverlay = (index) => {
