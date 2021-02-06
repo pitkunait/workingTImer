@@ -6,6 +6,8 @@ import {
 import { timerReducer } from './reducers';
 import { persistReducer } from 'redux-persist';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import UserReducer from './reducers/UserReducer';
+
 const customizedMiddleware = getDefaultMiddleware({
     serializableCheck: false,
     immutableCheck: false,
@@ -13,6 +15,7 @@ const customizedMiddleware = getDefaultMiddleware({
 
 const reducers = combineReducers({
     timer: timerReducer,
+    users: UserReducer,
 });
 
 const persistConfig = {

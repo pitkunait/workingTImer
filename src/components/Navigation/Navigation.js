@@ -4,6 +4,7 @@ import { Icon } from 'react-native-elements';
 import React from 'react';
 import Categories from '../Categories/Categories';
 import Timer from '../Timer/Timer';
+import Users from '../Users/Users';
 
 const Tab = createBottomTabNavigator();
 
@@ -29,6 +30,15 @@ function MyTabs() {
                 options={{
                     tabBarIcon: ({ color, size }) => (
                         <Icon name="timer" color={color} size={size} />
+                    ),
+                }}
+            />
+            <Tab.Screen
+                name="Users"
+                component={Users}
+                options={{
+                    tabBarIcon: ({ color, size }) => (
+                        <Icon name="person" color={color} size={size} />
                     ),
                 }}
             />

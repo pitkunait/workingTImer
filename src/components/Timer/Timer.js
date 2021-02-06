@@ -5,7 +5,7 @@ import { Button } from 'react-native-elements';
 import {
     startSelectedTimer,
     stopSelectedTimer,
-} from '../../store/actions/TimerActions';
+} from '../../store/reducers/TimerReducer';
 import connect from 'react-redux/lib/connect/connect';
 
 const Timer = (props) => {

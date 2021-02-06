@@ -20,10 +20,10 @@ import connect from 'react-redux/lib/connect/connect';
 import {
     addCategory,
     removeCategory,
-    restoreObjects,
+    restoreProject,
     selectCategory,
-    tick,
-} from '../../store/actions/TimerActions';
+    tickTimer,
+} from '../../store/reducers/TimerReducer';
 import Category from '../../data/Category';
 import BackgroundTimer from 'react-native-background-timer';
 
@@ -36,10 +36,10 @@ const Categories = (props) => {
     const [editCategory, setEditCategory] = useState();
 
     useEffect(() => {
-        props.restoreObjects();
+        props.restoreProject();
         BackgroundTimer.stop();
         const interval = setInterval(() => {
-            props.tick();
+            props.tickTimer();
         }, 1000);
         return () => {
             BackgroundTimer.start();
@@ -165,8 +165,8 @@ const mapDispatchToProps = {
     addCategory,
     removeCategory,
     selectCategory,
-    tick,
-    restoreObjects,
+    tickTimer,
+    restoreProject,
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
